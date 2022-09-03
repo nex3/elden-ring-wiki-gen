@@ -125,13 +125,16 @@
       <ng-container *ngIf="stats.parriable"> or parried</ng-container>
     </ng-container>
     <ng-template #other>
-      Only staggers after being
-      <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Stance">stance broken</a>
-      <ng-container *ngIf="stats.parriable"> or parried</ng-container>
-      and is <strong>not</strong> vulnerable to a
-      <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Critical+Damage">
-        critical hit
-      </a>
+      Immune to
+      <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Critical+Damage">critical attacks</a>.
+      Breaking its
+      <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Stance">stance</a>
+      <ng-container *ngIf="stats.parriable">
+        or
+        <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Parrying">parrying</a>
+        it
+      </ng-container>
+      will only stun it briefly
     </ng-template>
   </li>
   <li *ngIf="inflictedDamageTypes.length > 0">
