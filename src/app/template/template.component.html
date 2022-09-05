@@ -224,63 +224,67 @@
 </div>
 
 <ng-template #negations>
-  <h4 class="special">Negations (or Absorptions)</h4>
   <div class="row flexrow">
-    <div class="col-sm-6">
-      <ul>
-        <ng-container *ngFor="let entry of stats.absorptions | keyvalue:originalOrder | slice:0:4">
-          <ng-container *ngTemplateOutlet="
-            negation; context: {type: entry.key, value: entry.value}
-          "></ng-container>
-        </ng-container>
-      </ul>
+    <h4 class="special">Negations (or Absorptions)</h4>
+    <div class="row col-sm-12">
+      <div class="col-sm-6">
+        <ul>
+          <ng-container *ngFor="let entry of stats.absorptions | keyvalue:originalOrder | slice:0:4">
+            <ng-container *ngTemplateOutlet="
+              negation; context: {type: entry.key, value: entry.value}
+            "></ng-container>
+          </ng-container>
+        </ul>
+      </div>
+      <div class="col-sm-6">
+        <ul>
+          <ng-container *ngFor="let entry of stats.absorptions | keyvalue:originalOrder | slice:4:8">
+            <ng-container *ngTemplateOutlet="
+              negation; context: {type: entry.key, value: entry.value}
+            "></ng-container>
+          </ng-container>
+        </ul>
+      </div>
     </div>
-    <div class="col-sm-6">
-      <ul>
-        <ng-container *ngFor="let entry of stats.absorptions | keyvalue:originalOrder | slice:4:8">
-          <ng-container *ngTemplateOutlet="
-            negation; context: {type: entry.key, value: entry.value}
-          "></ng-container>
-        </ng-container>
-      </ul>
-    </div>
+    <p>The negation numbers are the % of your damage that gets blocked. For example, if a negation is 60, 40% of that damage by that type will go through and 60% will be negated. Bigger number = less damage. A negation of 100 means no damage goes through, and a negation of -100 mean the enemy takes 2x damage from that source. 0 means damage goes pretty much as is.</p>
   </div>
-  <p>The negation numbers are the % of your damage that gets blocked. For example, if a negation is 60, 40% of that damage by that type will go through and 60% will be negated. Bigger number = less damage. A negation of 100 means no damage goes through, and a negation of -100 mean the enemy takes 2x damage from that source. 0 means damage goes pretty much as is.</p>
 </ng-template>
 
 <ng-template #resistances>
-  <h4 class="special">Resistances</h4>
   <div class="row flexrow">
-    <div class="col-sm-6">
-      <ul>
-        <ng-container *ngFor="let entry of stats.resistances | keyvalue:originalOrder | slice:0:4">
-          <ng-container *ngTemplateOutlet="
-            resistance; context: {type: entry.key, value: entry.value}
-          "></ng-container>
-        </ng-container>
-      </ul>
+    <h4 class="special">Resistances</h4>
+    <div class="col-sm-12 row">
+      <div class="col-sm-6">
+        <ul>
+          <ng-container *ngFor="let entry of stats.resistances | keyvalue:originalOrder | slice:0:4">
+            <ng-container *ngTemplateOutlet="
+              resistance; context: {type: entry.key, value: entry.value}
+            "></ng-container>
+          </ng-container>
+        </ul>
+      </div>
+      <div class="col-sm-6">
+        <ul>
+          <ng-container *ngFor="let entry of stats.resistances | keyvalue:originalOrder | slice:4:6">
+            <ng-container *ngTemplateOutlet="
+              resistance; context: {type: entry.key, value: entry.value}
+            "></ng-container>
+          </ng-container>
+        </ul>
+      </div>
     </div>
-    <div class="col-sm-6">
-      <ul>
-        <ng-container *ngFor="let entry of stats.resistances | keyvalue:originalOrder | slice:4:6">
-          <ng-container *ngTemplateOutlet="
-            resistance; context: {type: entry.key, value: entry.value}
-          "></ng-container>
-        </ng-container>
-      </ul>
-    </div>
-  </div>
-  <p>
-    The resistance numbers are the buildup amount to trigger it. For
-    example, if a resistance is 100 you must deal 100 points of the given
-    buildup to trigger it. Note that these go down over time, and increase
-    each time the effect procs.
+    <p>
+      The resistance numbers are the buildup amount to trigger it. For
+      example, if a resistance is 100 you must deal 100 points of the given
+      buildup to trigger it. Note that these go down over time, and increase
+      each time the effect procs.
 
-    <ng-container *ngIf="hasMultipleResistanceProcs">
-      The values after the "/"s indicate the increased resistances after
-      each successive proc.
-    </ng-container>
-  </p>
+      <ng-container *ngIf="hasMultipleResistanceProcs">
+        The values after the "/"s indicate the increased resistances after
+        each successive proc.
+      </ng-container>
+    </p>
+  </div>
 </ng-template>
 
 <ng-template #negation let-type="type" let-value="value">
