@@ -162,7 +162,7 @@
   </li>
 </ul>
 
-<div class="row" *ngIf="display === 'full'">
+<div class="row flexrow" *ngIf="display === 'full'">
    <div class="col-sm-6">
      <ng-container *ngTemplateOutlet="negations"></ng-container>
    </div>
@@ -225,7 +225,7 @@
 
 <ng-template #negations>
   <h4 class="special">Negations (or Absorptions)</h4>
-  <div class="row">
+  <div class="row flexrow">
     <div class="col-sm-6">
       <ul>
         <ng-container *ngFor="let entry of stats.absorptions | keyvalue:originalOrder | slice:0:4">
@@ -250,7 +250,7 @@
 
 <ng-template #resistances>
   <h4 class="special">Resistances</h4>
-  <div class="row">
+  <div class="row flexrow">
     <div class="col-sm-6">
       <ul>
         <ng-container *ngFor="let entry of stats.resistances | keyvalue:originalOrder | slice:0:4">
