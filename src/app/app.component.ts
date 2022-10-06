@@ -128,11 +128,13 @@ export class AppComponent {
     const result = new Map<string, EnemyInfo>();
     for (const row of rows) {
       let name = row[3];
-      if (countByName.get(name)! > 1) name += ` (${row[0]})`;
+      if (countByName.get(name)! > 1) name += ` (${row[0]}, ${row[4]})`;
+      name = name.replace(' [Boss]', '');
       result.set(name, {
         name,
         rowIndex: row[5],
         id: row[0],
+        location: row[4],
         friendlyName: row[3].replace(/\[[^\]]+\]|\([^\)]\)| - .*/g, '').trim()
       });
     }
@@ -193,27 +195,19 @@ export class AppComponent {
       'Stat_Data',
       'Stat_Data_(NG+)',
       ...[...new Array(6).keys()].map(i => `Stat_Data_(NG+${i + 2})`)
-    ].map(async sheet => {
-      // Due to an apparent bug in the spreadsheet, the indexes in the NG+
-      // sheets are one lower than the NG spreadsheet. I should remove this
-      // once Phil fixes the sheet.
-      let index = info.rowIndex;
-      if (sheet != 'Stat_Data' && index >= 2538) index--;
-
-      return await (await this.gapiClient).sheets.spreadsheets.values.get({
+    ].map(async sheet =>
+      await (await this.gapiClient).sheets.spreadsheets.values.get({
         spreadsheetId: '1aujq95UfL_oUs3voPt3nGqM1hLhaVJOj6JKB6Np3FD8',
-        range: `${sheet}!A${index}:AX${index}`,
-      });
-    }));
+        range: `${sheet}!A${info.rowIndex}:AX${info.rowIndex}`,
+      })));
     const newGames = responses.map(response => {
       const result = response.result.values;
       return result ? result[0] : null;
     });
     if (newGames.some(newGame => !newGame)) return;
 
-    if (info.name.includes(' - ')) {
-      this.combatForm.controls['location'].setValue(
-          info.name.split(' - ')[1].replace(/.* \((.*)\)$/, '$1'));
+    if (info.location) {
+      this.combatForm.controls['location'].setValue(info.location);
     }
 
     this.combatForm.controls['stance'].setValue(newGames[0]![17]);

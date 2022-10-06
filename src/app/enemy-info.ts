@@ -12,6 +12,9 @@ export interface EnemyInfo {
   /** This enemy's NPC ID. */
   id: number;
 
+  /** The enemy's location in the world. */
+  location: string;
+
   /** The human-friendly name to fill into the name field. */
   friendlyName: string;
 }
