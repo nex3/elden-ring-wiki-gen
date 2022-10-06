@@ -116,7 +116,7 @@ export class AppComponent {
     // can look up more data later.
     const rows = response.result.values
         .map((row, i) => [...row, i + 2])
-        .filter(row => row[3] !== '???' && row[4] !== 'Unused');;
+        .filter(row => row[3] !== '???' && row[4] !== 'Unused');
 
     // Count how many rows there are with the same name so we know if we need to
     // disambiguate based on NPC ID.
@@ -193,11 +193,18 @@ export class AppComponent {
       'Stat_Data',
       'Stat_Data_(NG+)',
       ...[...new Array(6).keys()].map(i => `Stat_Data_(NG+${i + 2})`)
-    ].map(async sheet =>
-      await (await this.gapiClient).sheets.spreadsheets.values.get({
+    ].map(async sheet => {
+      // Due to an apparent bug in the spreadsheet, the indexes in the NG+
+      // sheets are one lower than the NG spreadsheet. I should remove this
+      // once Phil fixes the sheet.
+      let index = info.rowIndex;
+      if (sheet != 'Stat_Data' && index >= 2538) index--;
+
+      return await (await this.gapiClient).sheets.spreadsheets.values.get({
         spreadsheetId: '1aujq95UfL_oUs3voPt3nGqM1hLhaVJOj6JKB6Np3FD8',
-        range: `${sheet}!A${info.rowIndex}:AX${info.rowIndex}`,
-      })));
+        range: `${sheet}!A${index}:AX${index}`,
+      });
+    }));
     const newGames = responses.map(response => {
       const result = response.result.values;
       return result ? result[0] : null;
