@@ -84,98 +84,34 @@
 </ng-container>
 
 <h3 class="bonfire">{{enemyName}} Combat information</h3>
-<ul>
-  <li *ngIf="showEnemySpecific">
-    Health:
-    <span style="color: #ffffff;" data-mce-style="color: #ffffff;">
-      <strong>{{stats.health[0] | number}}</strong>
-      HP
-    </span>
-  </li>
-  <li *ngIf="showEnemySpecific && stats.defense[0]">
-    Defense:
-    <span style="color: #ffffff;" data-mce-style="color: #ffffff;">
-      <strong>{{stats.defense[0]}}</strong>
-    </span>
-  </li>
-  <li *ngIf="showCrossEnemy">
-    <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Stance">Stance</a>:
-    <span style="color: #ffffff;" data-mce-style="color: #ffffff;">
-      <strong>{{stats.stance}}</strong>
-    </span>
-  </li>
-  <li *ngIf="showCrossEnemy">
-    <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Parrying">Parryable</a>:
-    <ng-container *ngIf="stats.parriable; else other">
-      Yes<ng-container *ngIf="stats.parriesPerCrit !== 1">,
-        but {{stats.parriesPerCrit}} parries are required per
-        <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Parrying">stance break</a>
-      </ng-container>
-    </ng-container>
-    <ng-template #other>No</ng-template>
-  </li>
-  <li *ngIf="showCrossEnemy">
-    <ng-container *ngIf="stats.critable; else other">
-      Is vulnerable to a
-      <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Critical+Damage">
-        critical hit
-      </a>
-      after being
-      <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Stance">stance broken</a>
-      <ng-container *ngIf="stats.parriable"> or parried</ng-container>
-    </ng-container>
-    <ng-template #other>
-      Immune to
-      <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Critical+Damage">critical attacks</a>.
-      Breaking its
-      <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Stance">stance</a>
-      <ng-container *ngIf="stats.parriable">
-        or
-        <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Parrying">parrying</a>
-        it
-      </ng-container>
-      will only stun it briefly
-    </ng-template>
-  </li>
-  <li *ngIf="inflictedDamageTypes.length > 0">
-    Damage:
-    <ng-container *ngFor="let type of inflictedDamageTypes; let i = index"><!--
-      --><ng-container *ngIf="i !== 0">, </ng-container>
-      <ng-container *ngTemplateOutlet="iconLink; context: {type}"></ng-container><!--
-    --></ng-container>
-  </li>
-  <li *ngIf="inflictedStatusTypes.length > 0">
-    Inflicts:
-    <ng-container *ngFor="let type of inflictedStatusTypes; let i = index"><!--
-      --><ng-container *ngIf="i !== 0">, </ng-container>
-      <ng-container *ngTemplateOutlet="iconLink; context: {type}"></ng-container><!--
-    --></ng-container>
-  </li>
-  <li *ngIf="showEnemySpecific && stats.runes[0]">
-    Drops
-    <img
-      title="Runes Icon"
-      alt="Runes Icon"
-      src="https://eldenring.wiki.fextralife.com/file/Elden-Ring/runes-currency-elden-ring-wiki-guide-18.png"
-      attr.data-mce-src="/file/Elden-Ring/runes-currency-elden-ring-wiki-guide-18.png"
-    >{{stats.runes[0] | number}}
-  </li>
-</ul>
 
-<div class="row flexrow" *ngIf="display === 'full'">
-   <div class="col-sm-6">
-     <ng-container *ngTemplateOutlet="negations"></ng-container>
-   </div>
-   <div class="col-sm-6" *ngIf="showEnemySpecific">
-     <ng-container *ngTemplateOutlet="resistances"></ng-container>
-   </div>
+<ng-container *ngIf="display !== 'full'; else other">
+  <div class="row flexrow">
+    <div class="col-sm-6">
+      <ng-container *ngTemplateOutlet="combatInfo"></ng-container>
+    </div>
+    <div class="col-sm-6">
+      <ng-container *ngIf="display === 'cross-enemy'">
+        <ng-container *ngTemplateOutlet="negations"></ng-container>
+      </ng-container>
+      <ng-container *ngIf="display === 'enemy-specific'">
+        <ng-container *ngTemplateOutlet="resistances"></ng-container>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+<ng-template #other>
+    <ng-container *ngTemplateOutlet="combatInfo"></ng-container>
+    <div class="row flexrow" *ngIf="display === 'full'">
+      <div class="col-sm-6">
+        <ng-container *ngTemplateOutlet="negations"></ng-container>
+      </div>
+      <div class="col-sm-6" *ngIf="showEnemySpecific">
+        <ng-container *ngTemplateOutlet="resistances"></ng-container>
+      </div>
+    </div>
+  </ng-template>
 </div>
-<ng-container *ngIf="display === 'cross-enemy'">
-  <ng-container *ngTemplateOutlet="negations"></ng-container>
-</ng-container>
-<ng-container *ngIf="display === 'enemy-specific'">
-  <ng-container *ngTemplateOutlet="resistances"></ng-container>
-</ng-container>
 
 <div>
   <details open *ngIf="showEnemySpecific && highestNewGame > 0">
@@ -221,7 +157,86 @@
     </div>
   </details>
 </div>
-</div>
+
+<ng-template #combatInfo>
+  <ul>
+    <li *ngIf="showEnemySpecific">
+      Health:
+      <span style="color: #ffffff;" data-mce-style="color: #ffffff;">
+        <strong>{{stats.health[0] | number}}</strong>
+        HP
+      </span>
+    </li>
+    <li *ngIf="showEnemySpecific && stats.defense[0]">
+      Defense:
+      <span style="color: #ffffff;" data-mce-style="color: #ffffff;">
+        <strong>{{stats.defense[0]}}</strong>
+      </span>
+    </li>
+    <li *ngIf="showCrossEnemy">
+      <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Stance">Stance</a>:
+      <span style="color: #ffffff;" data-mce-style="color: #ffffff;">
+        <strong>{{stats.stance}}</strong>
+      </span>
+    </li>
+    <li *ngIf="showCrossEnemy">
+      <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Parrying">Parryable</a>:
+      <ng-container *ngIf="stats.parriable; else other">
+        Yes<ng-container *ngIf="stats.parriesPerCrit !== 1">,
+          but {{stats.parriesPerCrit}} parries are required per
+          <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Parrying">stance break</a>
+        </ng-container>
+      </ng-container>
+      <ng-template #other>No</ng-template>
+    </li>
+    <li *ngIf="showCrossEnemy">
+      <ng-container *ngIf="stats.critable; else other">
+        Is vulnerable to a
+        <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Critical+Damage">
+          critical hit
+        </a>
+        after being
+        <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Stance">stance broken</a>
+        <ng-container *ngIf="stats.parriable"> or parried</ng-container>
+      </ng-container>
+      <ng-template #other>
+        Immune to
+        <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Critical+Damage">critical attacks</a>.
+        Breaking its
+        <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Stance">stance</a>
+        <ng-container *ngIf="stats.parriable">
+          or
+          <a class="wiki_link" href="https://eldenring.wiki.fextralife.com/Parrying">parrying</a>
+          it
+        </ng-container>
+        will only stun it briefly
+      </ng-template>
+    </li>
+    <li *ngIf="inflictedDamageTypes.length > 0">
+      Damage:
+      <ng-container *ngFor="let type of inflictedDamageTypes; let i = index"><!--
+        --><ng-container *ngIf="i !== 0">, </ng-container>
+        <ng-container *ngTemplateOutlet="iconLink; context: {type}"></ng-container><!--
+      --></ng-container>
+    </li>
+    <li *ngIf="inflictedStatusTypes.length > 0">
+      Inflicts:
+      <ng-container *ngFor="let type of inflictedStatusTypes; let i = index"><!--
+        --><ng-container *ngIf="i !== 0">, </ng-container>
+        <ng-container *ngTemplateOutlet="iconLink; context: {type}"></ng-container><!--
+      --></ng-container>
+    </li>
+    <li *ngIf="showEnemySpecific && stats.runes[0]">
+      Drops
+      <img
+        title="Runes Icon"
+        alt="Runes Icon"
+        src="https://eldenring.wiki.fextralife.com/file/Elden-Ring/runes-currency-elden-ring-wiki-guide-18.png"
+        attr.data-mce-src="/file/Elden-Ring/runes-currency-elden-ring-wiki-guide-18.png"
+      >{{stats.runes[0] | number}}
+    </li>
+  </ul>
+</ng-template>
 
 <ng-template #negations>
   <div class="row flexrow">
