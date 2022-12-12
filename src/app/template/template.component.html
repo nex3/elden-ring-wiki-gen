@@ -112,48 +112,50 @@
     </div>
   </ng-template>
 
-  <details open *ngIf="showEnemySpecific && highestNewGame > 0">
-    <summary class="expandable">
-      NG+ and Beyond <small>(click to reveal)</small>
-    </summary>
-    <div class="table-responsive">
-      <table class="wiki_table">
-        <thead>
-          <tr>
-            <th scope="col" style="min-width: 9em"></th>
-            <th scope="col">NG</th>
-            <ng-container *ngFor="let _ of [].constructor(highestNewGame); let i = index">
-              <th scope="col">NG+{{i > 0 ? i + 1 : ''}}</th>
-            </ng-container>
-        </thead>
-        <tbody>
-          <ng-container *ngTemplateOutlet="
-            newGameRow;
-            context: {name: 'HP', data: stats.health, commas: true}
-          "></ng-container>
-          <ng-container *ngIf="hasNewGameValues(this.stats.defense)">
+  <div>
+    <details open *ngIf="showEnemySpecific && highestNewGame > 0">
+      <summary class="expandable">
+        NG+ and Beyond <small>(click to reveal)</small>
+      </summary>
+      <div class="table-responsive">
+        <table class="wiki_table">
+          <thead>
+            <tr>
+              <th scope="col" style="min-width: 9em"></th>
+              <th scope="col">NG</th>
+              <ng-container *ngFor="let _ of [].constructor(highestNewGame); let i = index">
+                <th scope="col">NG+{{i > 0 ? i + 1 : ''}}</th>
+              </ng-container>
+          </thead>
+          <tbody>
             <ng-container *ngTemplateOutlet="
               newGameRow;
-              context: {name: 'Defense', data: stats.defense}
+              context: {name: 'HP', data: stats.health, commas: true}
             "></ng-container>
-          </ng-container>
-          <ng-container *ngIf="hasNewGameValues(this.stats.runes)">
-            <ng-container *ngTemplateOutlet="
-              newGameRow; context: {type: 'runes', data: stats.runes, commas: true}
-            "></ng-container>
-          </ng-container>
-          <ng-container *ngIf="hasNewGameResistances">
-            <tr><th colspan="9"><h4>Resistances</h4></th></tr>
-            <ng-container *ngFor="let entry of stats.resistances | keyvalue:originalOrder">
+            <ng-container *ngIf="hasNewGameValues(this.stats.defense)">
               <ng-container *ngTemplateOutlet="
-                newGameRow; context: {type: entry.key, data: entry.value}
+                newGameRow;
+                context: {name: 'Defense', data: stats.defense}
               "></ng-container>
             </ng-container>
-          </ng-container>
-        </tbody>
-      </table>
-    </div>
-  </details>
+            <ng-container *ngIf="hasNewGameValues(this.stats.runes)">
+              <ng-container *ngTemplateOutlet="
+                newGameRow; context: {type: 'runes', data: stats.runes, commas: true}
+              "></ng-container>
+            </ng-container>
+            <ng-container *ngIf="hasNewGameResistances">
+              <tr><th colspan="9"><h4>Resistances</h4></th></tr>
+              <ng-container *ngFor="let entry of stats.resistances | keyvalue:originalOrder">
+                <ng-container *ngTemplateOutlet="
+                  newGameRow; context: {type: entry.key, data: entry.value}
+                "></ng-container>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </div>
 </div>
 
 <ng-template #combatInfo>
