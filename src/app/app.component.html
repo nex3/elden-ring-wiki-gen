@@ -196,6 +196,10 @@
     <div class="col-2">
       <button type="submit" class="btn btn-secondary" (click)="template.copyHtml()">Copy HTML</button>
     </div>
+
+    <div class="col-2">
+      <button type="submit" class="btn btn-secondary" (click)="template.copyNewGamePlus()">Copy NG+ Data</button>
+    </div>
   </div>
 
   <app-template [stats]="combatForm.value" [display]="displayForm.value.display"></app-template>

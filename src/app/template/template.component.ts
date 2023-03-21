@@ -20,6 +20,8 @@ export class TemplateComponent {
 
   @ViewChild('wrapper') private wrapper!: ElementRef<HTMLElement>;
 
+  @ViewChild('newGamePlus') private newGamePlus!: ElementRef<HTMLElement>;
+
   get hasNewGameResistances(): boolean {
     return Object.values(this.stats.resistances).some(array =>
         array !== null && array.slice(1).some(value => value.length > 0));
@@ -108,8 +110,24 @@ export class TemplateComponent {
     setTimeout(() => this.copied = false, 2000);
   }
 
+  async copyNewGamePlus(): Promise<void> {
+    const html = this.cleanHtml(this.newGamePlus);
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        "text/plain": new Blob([html], {type: "text/plain"}),
+      })
+    ]);
+
+    this.copied = true;
+    setTimeout(() => this.copied = false, 2000);
+  }
+
   private htmlToCopy(): string {
-    return this.wrapper.nativeElement.innerHTML
+    return this.cleanHtml(this.wrapper);
+  }
+
+  private cleanHtml(element: ElementRef<HTMLElement>): string {
+    return element.nativeElement.innerHTML
         // Details blocks should default to closed on Fextralife itself.
         .replace(/<details ([^>]+ )?open="">/g, '<details>')
         // Angular adds a bunch of comments that we don't need.
@@ -118,5 +136,4 @@ export class TemplateComponent {
         // anyway, but it makes the copy smaller and cleaner.
         .replace(/ _ng[a-z0-9-]+=""/g, '');
   }
-
 }
